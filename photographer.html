@@ -3,6 +3,7 @@
   <head>
     <link href="css/style.css" rel="stylesheet" type="text/css" />
     <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="icon" type="image/png" href="assets/favicon.png" />
     <link
       href="https://fonts.googleapis.com/css?family=DM+Sans&display=swap"
@@ -21,37 +22,89 @@
       /></a>
     </header>
     <main id="main">
-      <div class="photograph-header">
-        <button class="contact_button open-btn" onclick="displayModal()">
-          Contactez-moi
-        </button>
-      </div>
-      <div class="filter">
-        <p>Trier par</p>
-        <button
-          class="filter-btn"
-          data-sort="popularity"
-          aria-label="Trier par popularité"
-        >
-          Popularité
-        </button>
-        <button class="filter-btn" data-sort="date" aria-label="Trier par date">
-          Date
-        </button>
-        <button
-          class="filter-btn"
-          data-sort="titre"
-          aria-label="Trier par titre"
-        >
-          Titre
-        </button>
-      </div>
-      <section class="photo-gallery"></section>
-      <div class="likes-price">
-        <p><span id="total-likes">0</span> <i class="fa-solid fa-heart"></i></p>
-        <p><span id="price"></span> € / jour</p>
-      </div>
-      <div
+      <!-- Page principale du photographe  -->
+      <section class="page-content">
+        <div class="photograph-header">
+          <button class="contact_button open-btn">Contactez-moi</button>
+        </div>
+
+        <!-- Tri des médias -->
+        <section class="filter">
+          <h2>Trier par</h2>
+          <div class="dropdown">
+            <button
+              class="dropdown-toggle"
+              role="button"
+              aria-haspopup="listbox"
+              aria-expanded="false"
+              aria-controls="dropdown-menu"
+              aria-label="Trier les médias"
+            >
+              Popularité
+              <span class="fa-solid fa-chevron-down" aria-hidden="true"></span>
+            </button>
+            <ul
+              class="dropdown-menu"
+              id="dropdown-menu"
+              role="listbox"
+              aria-hidden="true"
+            >
+              <li role="none">
+                <div class="separator"></div>
+                <button
+                  class="filter-btn"
+                  data-sort="popularity"
+                  role="option"
+                  aria-selected="false"
+                  aria-label="Trier par popularité"
+                >
+                  Popularité
+                </button>
+                <div class="separator"></div>
+              </li>
+              <li role="none">
+                <button
+                  class="filter-btn"
+                  data-sort="date"
+                  role="option"
+                  aria-selected="false"
+                  aria-label="Trier par date"
+                >
+                  Date
+                </button>
+                <div class="separator"></div>
+              </li>
+              <li role="none">
+                <button
+                  class="filter-btn"
+                  data-sort="title"
+                  role="option"
+                  aria-selected="false"
+                  aria-label="Trier par titre"
+                >
+                  Titre
+                </button>
+              </li>
+            </ul>
+          </div>
+        </section>
+
+        <!-- Galerie photo  -->
+        <section class="photo-gallery"></section>
+
+        <!-- Encart info likes + prix  -->
+        <div class="likes-price">
+          <h2 class="sr-only">Statistiques</h2>
+          <p>
+            <span id="total-likes">0</span>
+            <span class="fa-solid fa-heart" role="img" aria-label="Cœur"></span>
+          </p>
+          <p><span id="price"></span> € / jour</p>
+        </div>
+      </section>
+
+      <!-- Formulaire de contact  -->
+      <section
         id="contact_modal"
         role="dialog"
         aria-labelledby="modal-title"
@@ -59,11 +112,14 @@
       >
         <div class="modal">
           <header>
-            <h2 id="modal-title">Contactez-moi</h2>
+            <h2 id="modal-title">
+              Contactez-moi <br /><span id="photographer-name"></span>
+            </h2>
             <img
               src="assets/icons/close.svg"
               class="close-btn"
-              onclick="closeModal()"
+              alt="close modal button"
+              aria-label="Fermer le formulaire"
             />
           </header>
           <form id="contact-form">
@@ -77,14 +133,46 @@
               <label for="message">Votre message</label>
               <textarea id="message"></textarea>
             </div>
-            <button class="contact_button" type="submit">Envoyer</button>
+            <button
+              class="contact_button"
+              type="submit"
+              aria-label="Envoyer le formulaire"
+            >
+              Envoyer
+            </button>
           </form>
         </div>
-      </div>
+      </section>
+
+      <!-- Lightbox médias  -->
+      <section
+        class="lightbox"
+        id="lightbox"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Galerie d'images"
+      >
+        <div class="lightbox-content">
+          <button class="close-lightbox" aria-label="Fermer la lightbox">
+            <span class="fa-solid fa-xmark" aria-hidden="true"></span>
+          </button>
+          <button class="prev-btn" aria-label="Média précédent">
+            <span class="fa-solid fa-chevron-left" aria-hidden="true"></span>
+          </button>
+          <div class="lightbox-media"></div>
+          <button class="next-btn" aria-label="Média suivant">
+            <span class="fa-solid fa-chevron-right" aria-hidden="true"></span>
+          </button>
+        </div>
+        <div class="lightbox-title-container">
+          <p class="lightbox-title"></p>
+        </div>
+      </section>
     </main>
-    <script src="/scripts/templates/photographer.js"></script>
-    <script src="/scripts/templates/mediaFactory.js"></script>
-    <script src="/scripts/pages/photographer.js"></script>
-    <script src="/scripts/utils/contactForm.js"></script>
+    <script src="/scripts/templates/mediaFactory.js" type="module"></script>
+    <script src="/scripts/utils/lightbox.js" type="module"></script>
+    <script src="/scripts/templates/photographer.js" type="module"></script>
+    <script src="/scripts/utils/contactForm.js" type="module"></script>
+    <script src="/scripts/pages/photographer.js" type="module"></script>
   </body>
 </html>

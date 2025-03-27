@@ -1,4 +1,6 @@
-function MediaFactory(data) {
+import { openLightbox } from "../utils/lightbox.js";
+
+export function MediaFactory(data, index, mediaData) {
   return {
     id: data.id,
     photographerId: data.photographerId,
@@ -24,6 +26,23 @@ function MediaFactory(data) {
         media.src = `assets/images/${this.photographerId}/${this.video}`;
       }
 
+      // Ajout d'un attribut data-index au média pour pouvoir retrouver l'index dans la galerie
+      media.dataset.index = index;
+      media.setAttribute("tabindex", "0");
+
+      // Création des éléments de média pour la lightbox
+      media.addEventListener("click", () => {
+        openLightbox(mediaData, index); // on passe l'index à openLightbox
+      });
+
+      // Ouvrir la lightbox avec "Enter" uniquement si ce n'est pas un like
+      media.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          openLightbox(mediaData, index);
+        }
+      });
+
       // Conteneur pour le titre et les likes
       const infoContainer = document.createElement("div");
       infoContainer.classList.add("info");
@@ -45,10 +64,12 @@ function MediaFactory(data) {
       const likeBtn = document.createElement("button");
       likeBtn.classList.add("like-btn");
       likeBtn.setAttribute("aria-label", "Ajouter un like");
-      likeBtn.innerHTML = `<i class="fa-solid fa-heart"></i>`;
+      likeBtn.innerHTML = `<span class="fa-solid fa-heart" role="img" aria-label="Cœur"></span>`;
 
       // Ajout de l'interactivité au bouton (toggle du like à chaque click)
-      likeBtn.addEventListener("click", () => {
+      likeBtn.addEventListener("click", (e) => {
+        e.stopPropagation(); // empêche la lightbox de s'ouvrir
+
         if (this.isLiked) {
           // Si l'image est déjà like, on retire le like
           this.likes--; // diminue le nombre de likes
@@ -72,6 +93,15 @@ function MediaFactory(data) {
         totalLikesElement.textContent = totalLikes; // MAJ affiche du nb total de likes
       });
 
+      // Empêcher la lightbox de s'ouvrir quand on appuie sur "Enter" sur le bouton like
+      likeBtn.addEventListener("keydown", (e) => {
+        if (e.key === "Enter") {
+          e.preventDefault();
+          e.stopPropagation();
+          likeBtn.click();
+        }
+      });
+
       // Ajout des éléments dans le conteneur de likes
       likesContainer.appendChild(likeCount);
       likesContainer.appendChild(likeBtn);
@@ -87,4 +117,20 @@ function MediaFactory(data) {
       return mediaElement;
     },
   };
+}
+
+// Fonction pour récupérer un photographe par ID
+export async function getPhotographerById(id) {
+  // Récupération des données du fichier JSON
+  const response = await fetch("data/photographers.json");
+  // Conversion des données en format JSON
+  const data = await response.json();
+
+  // Recherche du photographe avec l'ID dans le tableau "photographers"
+  const photographer = data.photographers.find(function (photographer) {
+    return photographer.id == id;
+  });
+
+  // Retourne le photographe trouvé par ID
+  return photographer;
 }

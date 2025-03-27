@@ -1,18 +1,9 @@
-// Fonction pour récupérer un photographe par ID
-async function getPhotographerById(id) {
-  // Récupération des données du fichier JSON
-  const response = await fetch("data/photographers.json");
-  // Conversion des données en format JSON
-  const data = await response.json();
-
-  // Recherche du photographe avec l'ID dans le tableau "photographers"
-  const photographer = data.photographers.find(function (photographer) {
-    return photographer.id == id;
-  });
-
-  // Retourne le photographe trouvé par ID
-  return photographer;
-}
+import {
+  MediaFactory,
+  getPhotographerById,
+} from "../templates/MediaFactory.js";
+import { photographerTemplate } from "../templates/photographer.js";
+import { openLightbox } from "../utils/lightbox.js";
 
 // Fonction pour afficher le header du photographe
 async function displayPhotoPage() {
@@ -51,14 +42,27 @@ async function displayPhotoGallery() {
   const galleryContainer = document.querySelector(".photo-gallery");
   galleryContainer.innerHTML = ""; // permet de nettoyer la galerie avant d'ajouter le contenu
 
-  mediaData.forEach((mediaItem) => {
-    const media = MediaFactory(mediaItem);
+  mediaData.forEach((mediaItem, index) => {
+    const media = MediaFactory(mediaItem, index, mediaData);
     const mediaDOM = media.getMediaDOM();
+
+    // Ouvrir la lightbox au click
+    mediaDOM.addEventListener("click", () => {
+      openLightbox(mediaData, index);
+    });
+
+    // Ouvrir la lightbox avec touche "Enter"
+    mediaDOM.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        openLightbox(mediaData, index);
+      }
+    });
+
     galleryContainer.appendChild(mediaDOM);
   });
 
   // Gestion des filtres avec les boutons après avoir récupéré les médias
-  handleFilterButtons(mediaData);
+  handleDropdownFilter(mediaData);
 }
 
 // Fonction pour gérer le tri
@@ -73,38 +77,127 @@ function handleSort(mediaArray, sortBy) {
 }
 
 // Fonction pour afficher la galerie avec les médias triés
-function updateGallery(mediaArray, photographerFolder) {
+function updateGallery(mediaArray) {
   const galleryContainer = document.querySelector(".photo-gallery");
   galleryContainer.innerHTML = ""; // on vide la galerie avant l'affichage du tri
 
-  mediaArray.forEach((mediaItem) => {
+  mediaArray.forEach((mediaItem, index) => {
     const mediaElement = MediaFactory(
       mediaItem,
-      photographerFolder
+      index,
+      mediaArray
     ).getMediaDOM();
+
+    mediaElement.addEventListener("keydown", (e) => {
+      if (e.key === "Enter") {
+        openLightbox(mediaArray, index);
+      }
+    });
+
     galleryContainer.appendChild(mediaElement);
   });
 }
 
-// Fonction de gestion des boutons pour filtrer les médias
-function handleFilterButtons(mediaArray) {
-  const filterButtons = document.querySelectorAll(".filter-btn");
+// Fonction pour gérer le menu déroulant pour filtrer les médias
+function handleDropdownFilter(mediaArray) {
+  const dropdown = document.querySelector(".dropdown");
+  const toggleBtn = document.querySelector(".dropdown-toggle");
+  const dropdownMenu = document.querySelector(".dropdown-menu");
+  const filterOptions = document.querySelectorAll(".filter-btn");
 
-  filterButtons.forEach((button) => {
-    button.addEventListener("click", (e) => {
+  // Ouvrir/fermer le menu déroulant + change l'icône du chevron
+  toggleBtn.addEventListener("click", () => {
+    const isOpen = dropdown.classList.toggle("active");
+
+    toggleBtn.setAttribute("aria-expanded", isOpen ? "false" : "true");
+
+    dropdownMenu.setAttribute("aria-hidden", isOpen ? "false" : "true");
+
+    const chevronIcon = toggleBtn.querySelector(
+      ".fa-chevron-up, .fa-chevron-down"
+    );
+
+    if (dropdown.classList.contains("active")) {
+      chevronIcon.classList.replace("fa-chevron-down", "fa-chevron-up");
+    } else {
+      chevronIcon.classList.replace("fa-chevron-up", "fa-chevron-down");
+    }
+  });
+
+  // Gestion du choix de tri selon le bouton cliqué
+  filterOptions.forEach((option) => {
+    option.addEventListener("click", (e) => {
       const sortBy = e.target.dataset.sort;
 
-      // on enlève la classe "active" de tous les boutons
-      filterButtons.forEach((btn) => btn.classList.remove("active"));
+      // MAJ du bouton principal avec la sélection
+      toggleBtn.innerHTML = `${e.target.innerText} <span class="fa-solid fa-chevron-down"></span>`;
 
-      // on ajoute la classe "active" seulement au bouton cliqué
-      e.target.classList.add("active");
+      // Fermer le menu après sélection
+      dropdown.classList.remove("active");
 
-      // Tri et affichage de la "nouvelle" galerie
+      // MAJ aria-selected pour les options
+      filterOptions.forEach((opt) => {
+        opt.setAttribute("aria-selected", "false");
+      });
+      e.target.setAttribute("aria-selected", "true");
+
+      // Trier et MAJ de la galerie
       const sortedMedia = handleSort(mediaArray, sortBy);
       updateGallery(sortedMedia);
     });
+
+    // Ferme le menu déroulant si click ailleurs sur la page
+    document.addEventListener("click", (e) => {
+      if (!dropdown.contains(e.target) && !toggleBtn.contains(e.target)) {
+        dropdown.classList.remove("active");
+
+        const chevronIcon = toggleBtn.querySelector(
+          ".fa-chevron-up, .fa-chevron-down"
+        );
+        chevronIcon.classList.replace("fa-chevron-up", "fa-chevron-down");
+      }
+    });
   });
+}
+
+// Gestion de la navigation au clavier
+document.addEventListener("keydown", (e) => {
+  const dropdown = document.querySelector(".dropdown");
+  if (!dropdown.classList.contains("active")) return;
+
+  const options = document.querySelectorAll(".filter-btn");
+  let focused = document.activeElement;
+
+  switch (e.key) {
+    case "ArrowDown":
+      e.preventDefault();
+      moveFocus(options, "next", focused);
+      break;
+    case "ArrowUp":
+      e.preventDefault();
+      moveFocus(options, "prev", focused);
+      break;
+    case "Enter":
+      e.preventDefault();
+      focused.click();
+      break;
+    case "Escape":
+      dropdown.classList.remove("active");
+      document.querySelector(".dropdown-toggle").focus();
+      break;
+  }
+});
+
+// Fonction pour déplacer le focus
+function moveFocus(options, direction, focused) {
+  let optionsArray = Array.from(options);
+  let currentIndex = optionsArray.indexOf(focused);
+  let nextIndex = direction === "next" ? currentIndex + 1 : currentIndex - 1;
+
+  if (nextIndex >= optionsArray.length) nextIndex = 0;
+  if (nextIndex < 0) nextIndex = optionsArray.length - 1;
+
+  optionsArray[nextIndex].focus();
 }
 
 document.addEventListener("DOMContentLoaded", async function () {
@@ -126,13 +219,6 @@ document.addEventListener("DOMContentLoaded", async function () {
   // Calcul du nombre total de likes
   let totalLikes = media.reduce((sum, item) => sum + item.likes, 0);
   document.getElementById("total-likes").textContent = totalLikes;
-
-  // Ajout d'un écouteur d'événement pour mettre à jour les likes quand on clique
-  document.querySelectorAll(".like-btn").forEach((button) => {
-    button.addEventListener("click", function () {
-      let likeElement = this.previousElementSibling;
-    });
-  });
 });
 
 // Lancement du script

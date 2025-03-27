@@ -1,7 +1,8 @@
+import { photographerTemplate } from "../templates/photographer.js";
+
 async function getPhotographers() {
   const reponse = await fetch("data/photographers.json");
   const data = await reponse.json();
-  console.log(data);
 
   // et bien retourner le tableau photographers seulement une fois récupéré
   return {
