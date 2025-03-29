@@ -21,11 +21,12 @@ export function openLightbox(mediaData, index) {
   if (media.image) {
     mediaElement = document.createElement("img");
     mediaElement.src = `assets/images/${media.photographerId}/${media.image}`;
-    mediaElement.alt = media.title;
+    mediaElement.alt = `${media.title}, closeup view`;
   } else {
     mediaElement = document.createElement("video");
     mediaElement.src = `assets/images/${media.photographerId}/${media.video}`;
     mediaElement.setAttribute("controls", "true");
+    mediaElement.setAttribute("aria-label", `${media.title}, closeup view`);
   }
 
   // Ajout du média dans la lightbox

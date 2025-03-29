@@ -25,7 +25,13 @@
       <!-- Page principale du photographe  -->
       <section class="page-content">
         <div class="photograph-header">
-          <button class="contact_button open-btn">Contactez-moi</button>
+          <button
+            class="contact_button open-btn"
+            aria-controls="contact_modal"
+            aria-label="Contact Me"
+          >
+            Contactez-moi
+          </button>
         </div>
 
         <!-- Tri des médias -->
@@ -38,7 +44,8 @@
               aria-haspopup="listbox"
               aria-expanded="false"
               aria-controls="dropdown-menu"
-              aria-label="Trier les médias"
+              aria-activedescendant="option-popularity"
+              aria-label="Order by"
             >
               Popularité
               <span class="fa-solid fa-chevron-down" aria-hidden="true"></span>
@@ -47,7 +54,7 @@
               class="dropdown-menu"
               id="dropdown-menu"
               role="listbox"
-              aria-hidden="true"
+              aria-labelledby="dropdown-toggle"
             >
               <li role="none">
                 <div class="separator"></div>
@@ -57,6 +64,7 @@
                   role="option"
                   aria-selected="false"
                   aria-label="Trier par popularité"
+                  id="option-popularity"
                 >
                   Popularité
                 </button>
@@ -69,6 +77,7 @@
                   role="option"
                   aria-selected="false"
                   aria-label="Trier par date"
+                  id="option-date"
                 >
                   Date
                 </button>
@@ -81,6 +90,7 @@
                   role="option"
                   aria-selected="false"
                   aria-label="Trier par titre"
+                  id="option-title"
                 >
                   Titre
                 </button>
@@ -125,19 +135,15 @@
           <form id="contact-form">
             <div>
               <label for="first-name">Prénom</label>
-              <input type="text" id="first-name" />
+              <input type="text" id="first-name" aria-labelledby="first-name" />
               <label for="last-name">Nom</label>
-              <input type="text" id="last-name" />
+              <input type="text" id="last-name" aria-labelledby="last-name" />
               <label for="email">Email</label>
-              <input type="email" id="email" />
+              <input type="email" id="email" aria-labelledby="email" />
               <label for="message">Votre message</label>
-              <textarea id="message"></textarea>
+              <textarea id="message" aria-labelledby="message"></textarea>
             </div>
-            <button
-              class="contact_button"
-              type="submit"
-              aria-label="Envoyer le formulaire"
-            >
+            <button class="contact_button" type="submit" aria-label="Send">
               Envoyer
             </button>
           </form>
@@ -153,14 +159,18 @@
         aria-label="Galerie d'images"
       >
         <div class="lightbox-content">
-          <button class="close-lightbox" aria-label="Fermer la lightbox">
-            <span class="fa-solid fa-xmark" aria-hidden="true"></span>
+          <button class="close-lightbox" aria-label="Close dialog">
+            <span
+              class="fa-solid fa-xmark"
+              aria-hidden="true"
+              aria-label="Close dialog"
+            ></span>
           </button>
-          <button class="prev-btn" aria-label="Média précédent">
+          <button class="prev-btn" aria-label="Previous image">
             <span class="fa-solid fa-chevron-left" aria-hidden="true"></span>
           </button>
           <div class="lightbox-media"></div>
-          <button class="next-btn" aria-label="Média suivant">
+          <button class="next-btn" aria-label="Next image">
             <span class="fa-solid fa-chevron-right" aria-hidden="true"></span>
           </button>
         </div>

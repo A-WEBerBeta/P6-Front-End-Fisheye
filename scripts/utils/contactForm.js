@@ -16,9 +16,11 @@ async function displayModal() {
 
   modal.style.display = "block";
   modal.setAttribute("aria-hidden", "false");
-  document.getElementById("first-name").focus();
 
+  pageContent.setAttribute("aria-hidden", "true");
   pageContent.setAttribute("inert", "true");
+
+  document.getElementById("first-name").focus();
 
   document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") {
@@ -30,6 +32,7 @@ async function displayModal() {
 function closeModal() {
   modal.style.display = "none";
   modal.setAttribute("aria-hidden", "true");
+  pageContent.setAttribute("aria-hidden", "false");
   pageContent.removeAttribute("inert");
   openModalBtn.focus();
 }

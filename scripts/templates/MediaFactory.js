@@ -64,7 +64,7 @@ export function MediaFactory(data, index, mediaData) {
       const likeBtn = document.createElement("button");
       likeBtn.classList.add("like-btn");
       likeBtn.setAttribute("aria-label", "Ajouter un like");
-      likeBtn.innerHTML = `<span class="fa-solid fa-heart" role="img" aria-label="Cœur"></span>`;
+      likeBtn.innerHTML = `<span class="fa-solid fa-heart" role="img" aria-label="likes"></span>`;
 
       // Ajout de l'interactivité au bouton (toggle du like à chaque click)
       likeBtn.addEventListener("click", (e) => {

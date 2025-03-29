@@ -102,16 +102,13 @@ function updateGallery(mediaArray) {
 function handleDropdownFilter(mediaArray) {
   const dropdown = document.querySelector(".dropdown");
   const toggleBtn = document.querySelector(".dropdown-toggle");
-  const dropdownMenu = document.querySelector(".dropdown-menu");
   const filterOptions = document.querySelectorAll(".filter-btn");
 
   // Ouvrir/fermer le menu déroulant + change l'icône du chevron
   toggleBtn.addEventListener("click", () => {
     const isOpen = dropdown.classList.toggle("active");
 
-    toggleBtn.setAttribute("aria-expanded", isOpen ? "false" : "true");
-
-    dropdownMenu.setAttribute("aria-hidden", isOpen ? "false" : "true");
+    toggleBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
 
     const chevronIcon = toggleBtn.querySelector(
       ".fa-chevron-up, .fa-chevron-down"
@@ -127,36 +124,40 @@ function handleDropdownFilter(mediaArray) {
   // Gestion du choix de tri selon le bouton cliqué
   filterOptions.forEach((option) => {
     option.addEventListener("click", (e) => {
-      const sortBy = e.target.dataset.sort;
+      const selectedOption = e.target;
+
+      // MAJ aria-selected pour chaque option
+      filterOptions.forEach((opt) => {
+        opt.setAttribute("aria-selected", "false");
+      });
+      selectedOption.setAttribute("aria-selected", "true");
+
+      // MAJ aria-activedescendant sur le bouton
+      toggleBtn.setAttribute("aria-activedescendant", selectedOption.id);
 
       // MAJ du bouton principal avec la sélection
-      toggleBtn.innerHTML = `${e.target.innerText} <span class="fa-solid fa-chevron-down"></span>`;
+      toggleBtn.innerHTML = `${selectedOption.innerText} <span class="fa-solid fa-chevron-down"></span>`;
 
       // Fermer le menu après sélection
       dropdown.classList.remove("active");
 
-      // MAJ aria-selected pour les options
-      filterOptions.forEach((opt) => {
-        opt.setAttribute("aria-selected", "false");
-      });
-      e.target.setAttribute("aria-selected", "true");
-
       // Trier et MAJ de la galerie
+      const sortBy = selectedOption.dataset.sort;
       const sortedMedia = handleSort(mediaArray, sortBy);
       updateGallery(sortedMedia);
     });
+  });
 
-    // Ferme le menu déroulant si click ailleurs sur la page
-    document.addEventListener("click", (e) => {
-      if (!dropdown.contains(e.target) && !toggleBtn.contains(e.target)) {
-        dropdown.classList.remove("active");
+  // Ferme le menu déroulant si click ailleurs sur la page
+  document.addEventListener("click", (e) => {
+    if (!dropdown.contains(e.target) && !toggleBtn.contains(e.target)) {
+      dropdown.classList.remove("active");
 
-        const chevronIcon = toggleBtn.querySelector(
-          ".fa-chevron-up, .fa-chevron-down"
-        );
-        chevronIcon.classList.replace("fa-chevron-up", "fa-chevron-down");
-      }
-    });
+      const chevronIcon = toggleBtn.querySelector(
+        ".fa-chevron-up, .fa-chevron-down"
+      );
+      chevronIcon.classList.replace("fa-chevron-up", "fa-chevron-down");
+    }
   });
 }
 

@@ -149,7 +149,7 @@ body {
 
 .gallery-item .info {
   display: flex;
-  align-items: center;
+  align-items: baseline;
   justify-content: space-between;
 
   p,
