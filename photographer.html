@@ -40,11 +40,10 @@
           <div class="dropdown">
             <button
               class="dropdown-toggle"
-              role="button"
+              id="dropdown-toggle"
               aria-haspopup="listbox"
               aria-expanded="false"
               aria-controls="dropdown-menu"
-              aria-activedescendant="option-popularity"
               aria-label="Order by"
             >
               Popularité
@@ -100,7 +99,9 @@
         </section>
 
         <!-- Galerie photo  -->
-        <section class="photo-gallery"></section>
+        <section class="photo-gallery">
+          <h2 class="sr-only">Galerie de photos</h2>
+        </section>
 
         <!-- Encart info likes + prix  -->
         <div class="likes-price">
@@ -129,7 +130,7 @@
               src="assets/icons/close.svg"
               class="close-btn"
               alt="close modal button"
-              aria-label="Fermer le formulaire"
+              aria-label="Close Contact form"
             />
           </header>
           <form id="contact-form">
@@ -160,11 +161,7 @@
       >
         <div class="lightbox-content">
           <button class="close-lightbox" aria-label="Close dialog">
-            <span
-              class="fa-solid fa-xmark"
-              aria-hidden="true"
-              aria-label="Close dialog"
-            ></span>
+            <span class="fa-solid fa-xmark" aria-hidden="true"></span>
           </button>
           <button class="prev-btn" aria-label="Previous image">
             <span class="fa-solid fa-chevron-left" aria-hidden="true"></span>

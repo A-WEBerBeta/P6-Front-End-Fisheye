@@ -42,7 +42,7 @@ export function photographerTemplate(data) {
 
   // Fonction pour générer le header de la page photographer
   function getUserHeaderDOM() {
-    const photographHeader = document.createElement("div");
+    const photographHeader = document.createElement("article");
     photographHeader.classList.add("header-content");
 
     const textContainer = document.createElement("div");
