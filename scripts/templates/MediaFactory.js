@@ -66,7 +66,7 @@ export function MediaFactory(data, index, mediaData) {
       likeBtn.setAttribute("aria-label", "Ajouter un like");
       likeBtn.innerHTML = `<span class="fa-solid fa-heart" role="img" aria-label="likes"></span>`;
 
-      // Ajout de l'interactivité au bouton (toggle du like à chaque click)
+      // Ajout de l'interactivité au bouton (toggle du like à chaque clic)
       likeBtn.addEventListener("click", (e) => {
         e.stopPropagation(); // empêche la lightbox de s'ouvrir
 

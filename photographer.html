@@ -46,7 +46,6 @@
               aria-controls="dropdown-menu"
               aria-label="Order by"
             >
-              Popularité
               <span class="fa-solid fa-chevron-down" aria-hidden="true"></span>
             </button>
             <ul
@@ -56,40 +55,42 @@
               aria-labelledby="dropdown-toggle"
             >
               <li role="none">
-                <div class="separator"></div>
                 <button
                   class="filter-btn"
                   data-sort="popularity"
                   role="option"
                   aria-selected="false"
-                  aria-label="Trier par popularité"
+                  aria-label="Order by popularity"
                   id="option-popularity"
+                  tabindex="-1"
                 >
                   Popularité
                 </button>
-                <div class="separator"></div>
               </li>
+              <div class="separator-1"></div>
               <li role="none">
                 <button
                   class="filter-btn"
                   data-sort="date"
                   role="option"
                   aria-selected="false"
-                  aria-label="Trier par date"
+                  aria-label="Order by date"
                   id="option-date"
+                  tabindex="-1"
                 >
                   Date
                 </button>
-                <div class="separator"></div>
               </li>
+              <div class="separator-2"></div>
               <li role="none">
                 <button
                   class="filter-btn"
                   data-sort="title"
                   role="option"
                   aria-selected="false"
-                  aria-label="Trier par titre"
+                  aria-label="Order by title"
                   id="option-title"
+                  tabindex="-1"
                 >
                   Titre
                 </button>
@@ -108,7 +109,7 @@
           <h2 class="sr-only">Statistiques</h2>
           <p>
             <span id="total-likes">0</span>
-            <span class="fa-solid fa-heart" role="img" aria-label="Cœur"></span>
+            <span class="fa-solid fa-heart" role="img" aria-label="Like"></span>
           </p>
           <p><span id="price"></span> € / jour</p>
         </div>
@@ -157,7 +158,7 @@
         id="lightbox"
         role="dialog"
         aria-modal="true"
-        aria-label="Galerie d'images"
+        aria-label="Image closeup view"
       >
         <div class="lightbox-content">
           <button class="close-lightbox" aria-label="Close dialog">

@@ -105,7 +105,9 @@ function handleDropdownFilter(mediaArray) {
   const filterOptions = document.querySelectorAll(".filter-btn");
 
   // Ouvrir/fermer le menu déroulant + change l'icône du chevron
-  toggleBtn.addEventListener("click", () => {
+  toggleBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+
     const isOpen = dropdown.classList.toggle("active");
 
     toggleBtn.setAttribute("aria-expanded", isOpen ? "true" : "false");
@@ -114,7 +116,7 @@ function handleDropdownFilter(mediaArray) {
       ".fa-chevron-up, .fa-chevron-down"
     );
 
-    if (dropdown.classList.contains("active")) {
+    if (isOpen) {
       chevronIcon.classList.replace("fa-chevron-down", "fa-chevron-up");
     } else {
       chevronIcon.classList.replace("fa-chevron-up", "fa-chevron-down");
@@ -127,8 +129,9 @@ function handleDropdownFilter(mediaArray) {
       const selectedOption = e.target;
 
       // MAJ aria-selected pour chaque option
-      filterOptions.forEach((opt) => {
+      filterOptions.forEach((opt, index) => {
         opt.setAttribute("aria-selected", "false");
+        opt.parentElement.style.order = index;
       });
       selectedOption.setAttribute("aria-selected", "true");
 
@@ -136,10 +139,15 @@ function handleDropdownFilter(mediaArray) {
       toggleBtn.setAttribute("aria-activedescendant", selectedOption.id);
 
       // MAJ du bouton principal avec la sélection
-      toggleBtn.innerHTML = `${selectedOption.innerText} <span class="fa-solid fa-chevron-down"></span>`;
+      toggleBtn.innerHTML = `<span class="fa-solid fa-chevron-down"></span>`;
 
       // Fermer le menu après sélection
       dropdown.classList.remove("active");
+      toggleBtn.setAttribute("aria-expanded", "false");
+      selectedOption.parentElement.style.order = "-1";
+
+      // Remettre le focus sur le bouton toggle
+      toggleBtn.focus();
 
       // Trier et MAJ de la galerie
       const sortBy = selectedOption.dataset.sort;
@@ -181,11 +189,21 @@ document.addEventListener("keydown", (e) => {
     case "Enter":
       e.preventDefault();
       focused.click();
+      document.querySelector(".dropdown-toggle").focus();
       break;
     case "Escape":
       dropdown.classList.remove("active");
       document.querySelector(".dropdown-toggle").focus();
       break;
+  }
+});
+
+const toggleBtn = document.querySelector(".dropdown-toggle");
+
+toggleBtn.addEventListener("keypress", (e) => {
+  if (e.key === "Enter" || e.key === " ") {
+    e.preventDefault();
+    toggleBtn.click();
   }
 });
 
