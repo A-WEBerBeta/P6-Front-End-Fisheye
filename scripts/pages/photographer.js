@@ -25,7 +25,7 @@ async function displayPhotoPage() {
 
 // Fonction pour récupérer les médias par ID de photographe
 async function getMediaPhotographerId(photographerId) {
-  const response = await fetch("/P6-Front-End-Fisheye/data/photographers.json");
+  const response = await fetch("../../data/photographers.json");
   const data = await response.json();
 
   return data.media.filter((media) => media.photographerId == photographerId);
@@ -224,7 +224,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const photographerId = url.searchParams.get("id");
 
   // Chargement des données du photographe et ses médias
-  const response = await fetch("/P6-Front-End-Fisheye/data/photographers.json");
+  const response = await fetch("../../data/photographers.json");
   const data = await response.json();
 
   const photographer = data.photographers.find((p) => p.id == photographerId);
