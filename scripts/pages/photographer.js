@@ -224,7 +224,7 @@ document.addEventListener("DOMContentLoaded", async function () {
   const photographerId = url.searchParams.get("id");
 
   // Chargement des données du photographe et ses médias
-  const response = await fetch("/data/photographers.json");
+  const response = await fetch("/P6-Front-End-Fisheye/data/photographers.json");
   const data = await response.json();
 
   const photographer = data.photographers.find((p) => p.id == photographerId);
