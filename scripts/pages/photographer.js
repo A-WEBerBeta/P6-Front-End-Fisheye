@@ -118,6 +118,10 @@ function handleDropdownFilter(mediaArray) {
 
     if (isOpen) {
       chevronIcon.classList.replace("fa-chevron-down", "fa-chevron-up");
+      const firstOption = document.querySelector(".filter-btn");
+      if (firstOption) {
+        firstOption.focus();
+      }
     } else {
       chevronIcon.classList.replace("fa-chevron-up", "fa-chevron-down");
     }
@@ -170,10 +174,9 @@ function handleDropdownFilter(mediaArray) {
 }
 
 // Gestion de la navigation au clavier
-document.addEventListener("keydown", (e) => {
-  const dropdown = document.querySelector(".dropdown");
-  if (!dropdown.classList.contains("active")) return;
+const dropdownMenu = document.querySelector(".dropdown-menu");
 
+dropdownMenu.addEventListener("keydown", (e) => {
   const options = document.querySelectorAll(".filter-btn");
   let focused = document.activeElement;
 
@@ -192,7 +195,8 @@ document.addEventListener("keydown", (e) => {
       document.querySelector(".dropdown-toggle").focus();
       break;
     case "Escape":
-      dropdown.classList.remove("active");
+      e.preventDefault();
+      document.querySelector(".dropdown").classList.remove("active");
       document.querySelector(".dropdown-toggle").focus();
       break;
   }

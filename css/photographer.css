@@ -393,3 +393,7 @@ form textarea {
   font-weight: 400;
   color: #901c1c;
 }
+
+.lightbox-content:focus {
+  outline: none;
+}

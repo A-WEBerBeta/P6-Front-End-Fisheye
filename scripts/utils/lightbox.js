@@ -53,7 +53,11 @@ export function openLightbox(mediaData, index) {
   title.textContent = media.title;
 
   // Mettre le focus sur la lightbox pour la navigation clavier
-  setTimeout(() => closeLightboxBtn.focus(), 50); // évite que le navigateur ignore la tentative de focus
+  setTimeout(() => {
+    nextBtn.focus();
+  }, 50);
+  document.querySelector(".lightbox-content").setAttribute("tabindex", "-1");
+  document.querySelector(".lightbox-content").focus();
 }
 
 // Fonction pour fermer la lightbox
@@ -73,14 +77,35 @@ function closeLightbox() {
 closeLightboxBtn.addEventListener("click", closeLightbox);
 
 // Fermeture et navigation au clavier
+// document.addEventListener("keydown", function (e) {
+//   if (lightbox.style.display === "flex") {
+//     if (e.key === "Escape") {
+//       closeLightbox();
+//     } else if (e.key === "ArrowLeft") {
+//       prevBtn.click();
+//     } else if (e.key === "ArrowRight") {
+//       nextBtn.click();
+//     }
+//   }
+// });
 document.addEventListener("keydown", function (e) {
-  if (lightbox.style.display === "flex") {
-    if (e.key === "Escape") {
+  const isLightboxOpen = lightbox.style.display === "flex";
+  const isFocusInsideLightbox = lightbox.contains(document.activeElement);
+
+  if (!isLightboxOpen || !isFocusInsideLightbox) return;
+
+  switch (e.key) {
+    case "Escape":
+      e.preventDefault();
       closeLightbox();
-    } else if (e.key === "ArrowLeft") {
+      break;
+    case "ArrowLeft":
+      e.preventDefault();
       prevBtn.click();
-    } else if (e.key === "ArrowRight") {
+      break;
+    case "ArrowRight":
+      e.preventDefault();
       nextBtn.click();
-    }
+      break;
   }
 });
