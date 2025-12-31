@@ -23,8 +23,8 @@ Refondre une plateforme web de photographes en améliorant l'accessibilité et l
 - Contrastes adaptés
 - Balises sémantiques
 
-  ## Installation
-  ```bash
-  npm install
-  npm run dev
+## Installation
+```bash
+npm install
+npm run dev
 
